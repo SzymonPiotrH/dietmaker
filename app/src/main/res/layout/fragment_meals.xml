@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dodaj nowy posiłek"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/editTextMealName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nazwa posiłku"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/editTextCarbs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Węglowodany (g)"
+        android:inputType="numberDecimal"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/editTextProteins"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Białka (g)"
+        android:inputType="numberDecimal"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/editTextFats"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tłuszcze (g)"
+        android:inputType="numberDecimal"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/editTextCalories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Kalorie"
+        android:inputType="numberDecimal"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/buttonAddMeal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Dodaj posiłek"
+        android:layout_marginTop="16dp"/>
+
+    <Button
+        android:id="@+id/buttonSearchMeal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Wyszukaj produkt"
+        android:layout_marginTop="8dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewMeals"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="16dp"/>
+
+</LinearLayout>
