@@ -35,6 +35,10 @@ class MainDashboardFragment : Fragment() {
             (activity as MainActivity).replaceFragment(ProfileFragment())
         }
 
+        binding.buttonSensor.setOnClickListener {
+            (activity as MainActivity).replaceFragment(SensorFragment())
+        }
+
         setupUserInfo()
         setupProgressBars()
 
