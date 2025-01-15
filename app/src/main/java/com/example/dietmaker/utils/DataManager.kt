@@ -1,4 +1,3 @@
-// Lokalizacja: app/src/main/java/com/example/dietmaker/utils/DataManager.kt
 package com.example.dietmaker.utils
 
 //import androidx.lifecycle.LiveData
@@ -7,6 +6,8 @@ import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.*
 
 // Model pojedynczego posiłku
@@ -22,7 +23,7 @@ data class Meal(
 class DataManager(private val context: Context) {
     private val sharedPrefs = context.getSharedPreferences("DietMakerPrefs", Context.MODE_PRIVATE)
     private val gson = Gson()
-//!!! experimental
+    //!!! experimental
 //    private val _mealsData = MutableLiveData<List<Meal>>()
 //    val mealsData: LiveData<List<Meal>> = _mealsData
 //!!!
@@ -47,6 +48,12 @@ class DataManager(private val context: Context) {
             emptyList()
         }
     }
+    // Odczyt posiłków dla konkretnej daty
+    fun getMealsForDate(localDate: LocalDate): List<Meal> {
+        val date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+        return getMealsForDate(date) // Wywołanie istniejącej metody
+    }
+
 
     // Zapis informacji o użytkowniku
     fun saveUserProfile(name: String, carbGoal: Float, proteinGoal: Float, fatGoal: Float, calorieGoal: Float) {

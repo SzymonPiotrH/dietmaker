@@ -1,4 +1,3 @@
-// Lokalizacja: app/src/main/java/com/example/dietmaker/fragments/MainDashboardFragment.kt
 package com.example.dietmaker.fragments
 
 import android.os.Bundle
@@ -11,23 +10,33 @@ import com.example.dietmaker.MainActivity
 import com.example.dietmaker.utils.DataManager
 import com.example.dietmaker.R
 import com.example.dietmaker.databinding.FragmentMainDashboardBinding
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.*
+import java.text.SimpleDateFormat
+import android.util.Log
 
 class MainDashboardFragment : Fragment() {
     private lateinit var binding: FragmentMainDashboardBinding
     private lateinit var dataManager: DataManager
+    private val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+    var currentDate : LocalDate = LocalDate.now()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.d("MainDashboardFragment", "onCreateView called")
+
         binding = FragmentMainDashboardBinding.inflate(inflater, container, false)
         dataManager = DataManager(requireContext())
 
         // Dodaj w metodzie onCreateView lub w osobnej metodzie setupButtons
         binding.buttonMeals.setOnClickListener {
-            (activity as MainActivity).replaceFragment(MealsFragment())
+            val mealsFragment = MealsFragment.newInstance(currentDate)
+            (activity as MainActivity).replaceFragment(mealsFragment)
         }
 
         // Dodaj w metodzie onCreateView lub w osobnej metodzie setupButtons
@@ -39,8 +48,25 @@ class MainDashboardFragment : Fragment() {
             (activity as MainActivity).replaceFragment(SensorFragment())
         }
 
+        binding.buttonCalendar.setOnClickListener{ //Dodanie przycisku kalendarza
+            (activity as MainActivity).replaceFragment(CalendarFragment())
+        }
+
+        parentFragmentManager.setFragmentResultListener("selectedDate", viewLifecycleOwner) { key, bundle ->
+            Log.d("MainDashboardFragment", "setFragmentResultListener called")
+            val selectedDateString = bundle.getString("date")
+            Log.d("MainDashboardFragment", "Received date string: $selectedDateString")
+            val selectedDate = LocalDate.parse(selectedDateString)
+            Log.d("MainDashboardFragment", "Parsed date: $selectedDate")
+            currentDate = selectedDate
+            updateDateTextView(currentDate)
+            setupProgressBars(currentDate)
+
+
+        }
         setupUserInfo()
-        setupProgressBars()
+        setupProgressBars(currentDate)
+
 
         return binding.root
     }
@@ -50,22 +76,30 @@ class MainDashboardFragment : Fragment() {
         binding.tvUsername.text = userProfile.name
 
         // Ustawienie aktualnej daty
-        val currentDate = Date()
-        binding.tvCurrentDate.text = android.text.format.DateFormat.getDateFormat(requireContext()).format(currentDate)
+        Log.d("MainDashboardFragment", "setupUserInfo called")
+        updateDateTextView(currentDate)
+
+
     }
 
-
-
-    private fun setupProgressBars() {
+    private fun updateDateTextView(date: LocalDate){
+        val dateToConvert: Date = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant())
+        binding.tvCurrentDate.text = dateFormat.format(dateToConvert)
+        Log.d("MainDashboardFragment", "updateDateTextView called with date: $date")
+    }
+    private fun setupProgressBars(date: LocalDate) {
         val userProfile = dataManager.getUserProfile()
-        val currentDate = Date()
-        val meals = dataManager.getMealsForDate(currentDate)
+        val dateToConvert: Date = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant())
+        val meals = dataManager.getMealsForDate(dateToConvert)
+        Log.d("MainDashboardFragment", "setupProgressBars called with date: $date, meals size: ${meals.size}")
+
 
         // Obliczenie sum makroskładników
         val totalCarbs = meals.sumOf { it.carbohydrates.toDouble() }
         val totalProteins = meals.sumOf { it.proteins.toDouble() }
         val totalFats = meals.sumOf { it.fats.toDouble() }
         val totalCalories = meals.sumOf { it.calories.toDouble() }
+        Log.d("MainDashboardFragment", "Total calories: $totalCalories, carbs: $totalCarbs, proteins: $totalProteins, fats: $totalFats")
 
 
         // Ustawienie pasków postępu
@@ -118,13 +152,14 @@ class MainDashboardFragment : Fragment() {
 
         }
 
-
-
         labelView?.text = "$label (${percentage.toInt()}%)"
     }
 
+
     override fun onResume() {
         super.onResume()
-        setupProgressBars()  // Odświeżamy paski postępu
+        Log.d("MainDashboardFragment", "onResume called")
+        setupProgressBars(currentDate)
+
     }
 }

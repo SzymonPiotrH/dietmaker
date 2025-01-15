@@ -1,4 +1,3 @@
-// app/src/main/java/com/example/dietmaker/fragments/SearchMealFragment.kt
 package com.example.dietmaker.fragments
 
 import android.os.Bundle
@@ -17,13 +16,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Date
 import com.example.dietmaker.api.FoodQuery
-
-
-import com.example.dietmaker.api.NutritionixFood // to dodałem sam
-import com.example.dietmaker.adapters.SearchResultAdapter // i to
-import androidx.recyclerview.widget.LinearLayoutManager // to dodałem automatem
+import com.example.dietmaker.api.NutritionixFood
+import com.example.dietmaker.adapters.SearchResultAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dietmaker.utils.Meal
-
+import java.time.LocalDate
+import java.time.ZoneId
 
 
 class SearchMealFragment : Fragment() {
@@ -31,6 +29,8 @@ class SearchMealFragment : Fragment() {
     private lateinit var dataManager: DataManager
     private var searchJob: Job? = null
     private lateinit var searchAdapter: SearchResultAdapter
+    private var currentDate: Date = Date()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +39,10 @@ class SearchMealFragment : Fragment() {
     ): View {
         binding = FragmentSearchMealBinding.inflate(inflater, container, false)
         dataManager = DataManager(requireContext())
+        currentDate = arguments?.getString("date")?.let {
+            Date.from(LocalDate.parse(it).atStartOfDay(ZoneId.systemDefault()).toInstant())
+        } ?: Date()
+
 
         setupRecyclerView()
         setupSearchField()
@@ -56,9 +60,9 @@ class SearchMealFragment : Fragment() {
                 fats = food.nf_total_fat.toFloat(),
                 calories = food.nf_calories.toFloat()
             )
-            val currentMeals = dataManager.getMealsForDate(Date()).toMutableList()
+            val currentMeals = dataManager.getMealsForDate(currentDate).toMutableList()
             currentMeals.add(meal)
-            dataManager.saveMealsForDate(Date(), currentMeals)
+            dataManager.saveMealsForDate(currentDate, currentMeals)
 
             // Wróć do poprzedniego fragmentu
             parentFragmentManager.popBackStack()
@@ -76,40 +80,6 @@ class SearchMealFragment : Fragment() {
         }
     }
 
-    /*private fun setupSearchField() {
-        binding.searchInput.addTextChangedListener { editable ->
-            searchJob?.cancel()
-            searchJob = lifecycleScope.launch {
-                delay(500) // Debounce search
-                editable?.toString()?.let { query ->
-                    if (query.length >= 3) {
-                        searchFood(query)
-                    }
-                }
-            }
-        }
-    }
-
-    private suspend fun searchFood(query: String) {
-        try {
-            binding.searchResults.visibility = View.VISIBLE
-            val response = NutritionixClient.api.searchFood(FoodQuery(query))
-            if (response.isSuccessful) {
-                val foods = response.body()?.foods ?: emptyList()
-                println("Otrzymano ${foods.size} wyników")
-                println("Response body: ${response.body()}")  // dodaj to logowanie
-                displaySearchResults(foods)
-            } else {
-                val errorBody = response.errorBody()?.string()
-                println("Błąd: $errorBody")
-                Toast.makeText(context, "Błąd wyszukiwania: ${response.code()}", Toast.LENGTH_SHORT).show()
-            }
-        } catch (e: Exception) {
-            println("Wyjątek: ${e.message}")
-            e.printStackTrace() // dodaj stack trace
-            Toast.makeText(context, "Błąd połączenia: ${e.message}", Toast.LENGTH_SHORT).show()
-        }
-    }*/
 
     private fun setupSearchField() {
         binding.searchInput.addTextChangedListener { editable ->

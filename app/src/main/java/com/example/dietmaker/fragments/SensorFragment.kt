@@ -56,7 +56,7 @@ class SensorFragment : Fragment(), SensorEventListener {
     private fun setupMeasureLightButton() {
         binding.buttonMeasureLight.setOnClickListener {
             if (lightSensor != null) {
-                // Rejestrujemy nasłuchiwanie czujnika światła na krótki moment
+                // Rejestrujemy nasłuchiwanie czujnika światła na krótki moment. Czemu na krutki? Nie mam pojęcia
                 sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL)
             } else {
                 binding.textLightValue.text = "Czujnik światła niedostępny"
@@ -107,7 +107,7 @@ class SensorFragment : Fragment(), SensorEventListener {
     private fun handleLightSensorEvent(event: SensorEvent) {
         val lightValue = event.values[0]
         binding.textLightValue.text = String.format("%.1f lux", lightValue)
-        // Wyrejestrowujemy nasłuchiwanie czujnika światła po otrzymaniu odczytu
+        // Wyrejestrowujemy nasłuchiwanie czujnika światła po otrzymaniu odczytu, na necie było, że tak trzeba
         sensorManager.unregisterListener(this, lightSensor)
     }
 

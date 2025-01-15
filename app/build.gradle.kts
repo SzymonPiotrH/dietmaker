@@ -10,9 +10,13 @@ android {
     namespace = "com.example.dietmaker"
     compileSdk = 34 //34
 
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.0"
+    }
+
     defaultConfig {
         applicationId = "com.example.dietmaker"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 33 //35
         versionCode = 1
         versionName = "1.0"
@@ -38,7 +42,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
-        //compose = true
+        compose = true
     }
 
 }
@@ -63,6 +67,12 @@ dependencies {
 
     // Progress bars
     implementation("com.akexorcist:round-corner-progress-bar:2.2.0")
+
+    implementation("androidx.compose.ui:ui:1.3.3")
+    implementation("androidx.compose.material:material:1.3.1")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.3.3")
+    implementation("androidx.activity:activity-compose:1.6.1")
+    implementation("androidx.compose.ui:ui-tooling:1.3.3")
 
 //    implementation(libs.androidx.core.ktx)
 //    implementation(libs.androidx.lifecycle.runtime.ktx)

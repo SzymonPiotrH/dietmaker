@@ -34,6 +34,15 @@
         app:layout_constraintTop_toTopOf="@id/buttonMeals"
         app:layout_constraintStart_toEndOf="@id/buttonMeals"/>
 
+    <Button
+        android:id="@+id/buttonCalendar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kalendarz"
+        android:layout_marginStart="8dp"
+        app:layout_constraintTop_toTopOf="@id/buttonSensor"
+        app:layout_constraintStart_toEndOf="@id/buttonSensor"/>
+
 
     <TextView
         android:id="@+id/tvUsername"

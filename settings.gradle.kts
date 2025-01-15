@@ -16,8 +16,10 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        // Tutaj mogą być inne repozytoria
     }
 }
+
 
 rootProject.name = "dietmaker"
 include(":app")
